@@ -28,3 +28,24 @@ test.describe("API login function", () => {
     );
   });
 });
+
+test.describe("Login page UI", () => {
+  test("should display error message with invalid credentials", async ({
+    page,
+  }) => {
+    await page.goto("/login/index.html");
+
+    await page.fill(
+      'input[name="email"]',
+      process.env.TEST_USER_EMAIL || "test@example.com",
+    );
+    await page.fill('input[name="password"]', "wrongpassword");
+
+    await page.click('button[type="submit"]');
+
+    await expect(page.locator("#message-container")).toBeVisible();
+    await expect(page.locator("#message-container")).toContainText(
+      "Invalid email or password",
+    );
+  });
+});
